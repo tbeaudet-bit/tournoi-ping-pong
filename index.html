@@ -357,12 +357,16 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
     <div class="admin-section">
       <h3>⚙️ Panneau administrateur</h3>
       <div class="admin-btns">
-        <button class="admin-btn" onclick="openModal('tirage')">🎲 Lancer le tirage au sort</button>
+        <button class="admin-btn" onclick="openModal('tirage')">🎲 Lancer le tirage des poules</button>
+        <button class="admin-btn" onclick="openModal('finales')">🏆 Lancer le tirage des phases finales</button>
         <button class="admin-btn danger" onclick="openModal('reset')">🗑️ Remettre le tournoi à zéro</button>
       </div>
       <div id="admin-msg" style="margin-top:12px"></div>
     </div>
-    <div class="alert alert-info">Le tirage répartit automatiquement tous les inscrits en groupes et génère tous les matchs.</div>
+    <div class="alert alert-info">
+      <strong>Étape 1 :</strong> Lance le tirage des poules une fois tous les joueurs inscrits.<br>
+      <strong>Étape 2 :</strong> Lance le tirage des phases finales une fois toutes les poules terminées.
+    </div>
   </div>
 
 </div><!-- /app -->
@@ -419,6 +423,20 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-tirage')">Annuler</button>
       <button class="btn-primary" onclick="submitTirage()">🎲 Lancer !</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FINALES -->
+<div class="modal-bg" id="modal-finales">
+  <div class="modal">
+    <h3>🏆 Lancer les phases finales</h3>
+    <p>Génère l'arbre des 8e de finale avec les top 2 de chaque groupe. Tous les matchs de poules doivent être terminés.</p>
+    <div class="modal-err" id="finales-err"></div>
+    <input type="password" id="finales-pwd" placeholder="Mot de passe admin">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('modal-finales')">Annuler</button>
+      <button class="btn-primary" onclick="submitFinales()">🏆 Générer l'arbre !</button>
     </div>
   </div>
 </div>
@@ -860,13 +878,16 @@ document.querySelectorAll('.modal-bg').forEach(bg=>{
 
 let currentMatchIdx=null, isEditMode=false;
 
-function openScore(idx,j1,j2,edit=false){
-  currentMatchIdx=idx; isEditMode=edit;
+let currentPhase = 'Poules';
+
+function openScore(idx,j1,j2,edit=false,phase='Poules'){
+  currentMatchIdx=idx; isEditMode=edit; currentPhase=phase;
   const m=globalMatchs[idx];
+  const maxSets = (phase==='Poules'||!phase) ? 2 : 3;
   document.getElementById('modal-score-title').textContent = edit?'✏️ Modifier le score':'🏓 Saisir le score';
   document.getElementById('modal-score-desc').textContent=`${j1}  vs  ${j2}`;
-  document.getElementById('sc-s1').placeholder=`Score de ${j1}`;
-  document.getElementById('sc-s2').placeholder=`Score de ${j2}`;
+  document.getElementById('sc-s1').placeholder=`Sets gagnés par ${j1} (0 à ${maxSets})`;
+  document.getElementById('sc-s2').placeholder=`Sets gagnés par ${j2} (0 à ${maxSets})`;
   document.getElementById('sc-s1').value=edit&&m?m.S1:'';
   document.getElementById('sc-s2').value=edit&&m?m.S2:'';
   document.getElementById('score-err').style.display='none';
@@ -878,10 +899,9 @@ async function submitScore(){
   const s2=document.getElementById('sc-s2').value;
   const err=document.getElementById('score-err');
   if(s1===''||s2===''){err.textContent='Remplis les deux scores.';err.style.display='block';return;}
-  if(parseInt(s1)===parseInt(s2)){err.textContent='Pas de match nul au ping pong !';err.style.display='block';return;}
   err.style.display='none';
   try {
-    const res=await callAPI({action:'score',matchId:currentMatchIdx,s1:parseInt(s1),s2:parseInt(s2),userCode:currentUser.code});
+    const res=await callAPI({action:'score',matchId:currentMatchIdx,s1:parseInt(s1),s2:parseInt(s2),userCode:currentUser.code,phase:currentPhase});
     if(res.ok){closeModal('modal-score');await loadAll();}
     else{err.textContent=res.error||'Erreur';err.style.display='block';}
   }catch(e){err.textContent='Erreur réseau.';err.style.display='block';}
@@ -916,11 +936,31 @@ async function submitTirage(){
   if(!pwd){err.textContent='Mot de passe requis.';err.style.display='block';return;}
   err.style.display='none';
   try{
-    const res=await callAPI({action:'tirage',password:pwd});
+    const res=await callAPI({action:'tirage_poules',password:pwd});
     if(res.ok){
       closeModal('modal-tirage');
-      document.getElementById('admin-msg').innerHTML=`<div class="alert alert-success">✅ Tirage effectué ! ${res.nbJoueurs} joueurs en ${res.nbGroupes} groupes.</div>`;
+      document.getElementById('admin-msg').innerHTML=`<div class="alert alert-success">✅ Tirage effectué ! ${res.nbJoueurs} joueurs en ${res.nbGroupes} groupes — ${res.nbMatchs} matchs générés.</div>`;
       await loadAll();
+    }else{err.textContent=res.error||'Erreur';err.style.display='block';}
+  }catch(e){err.textContent='Erreur réseau.';err.style.display='block';}
+}
+
+async function submitFinales(){
+  const pwd=document.getElementById('finales-pwd').value;
+  const err=document.getElementById('finales-err');
+  if(!pwd){err.textContent='Mot de passe requis.';err.style.display='block';return;}
+  err.style.display='none';
+  try{
+    const res=await callAPI({action:'tirage_finales',password:pwd});
+    if(res.ok){
+      closeModal('modal-finales');
+      document.getElementById('admin-msg').innerHTML=`<div class="alert alert-success">✅ Phases finales générées ! ${res.nbQualifies} qualifiés. Va voir l'arbre 🏆</div>`;
+      await loadAll();
+      // Navigue vers l'arbre
+      document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('#app .page').forEach(p=>p.classList.remove('active'));
+      document.getElementById('page-arbre').classList.add('active');
+      document.querySelectorAll('.nav-btn')[3].classList.add('active');
     }else{err.textContent=res.error||'Erreur';err.style.display='block';}
   }catch(e){err.textContent='Erreur réseau.';err.style.display='block';}
 }
