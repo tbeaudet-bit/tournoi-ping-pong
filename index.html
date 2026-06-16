@@ -48,10 +48,7 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
 .page { display: none; }
 .page.active { display: block; }
 
-/* CARDS */
-.card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); }
-
-/* STATS HERO */
+/* STATS */
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
 .stat-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 18px; position: relative; overflow: hidden; }
 .stat-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
@@ -66,6 +63,33 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
 /* SECTION TITLE */
 .stitle { font-size: 18px; font-weight: 700; color: var(--cg-navy); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
 .stitle::after { content: ''; flex: 1; height: 2px; background: linear-gradient(to right, var(--cg-teal), transparent); border-radius: 1px; }
+
+/* INSCRIPTION */
+.inscription-hero { background: linear-gradient(135deg, var(--cg-navy) 0%, #2a3f7a 100%); border-radius: var(--radius); padding: 32px; text-align: center; color: #fff; margin-bottom: 24px; position: relative; overflow: hidden; }
+.inscription-hero::before { content: '🏓'; position: absolute; font-size: 120px; opacity: 0.06; right: -10px; top: -20px; }
+.inscription-hero h2 { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+.inscription-hero p { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 24px; }
+.inscription-form { background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; max-width: 420px; margin: 0 auto; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.form-input { width: 100%; padding: 11px 14px; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 8px; font-size: 14px; background: rgba(255,255,255,0.15); color: #fff; outline: none; transition: border-color 0.15s; }
+.form-input::placeholder { color: rgba(255,255,255,0.5); }
+.form-input:focus { border-color: var(--cg-teal); background: rgba(255,255,255,0.2); }
+.form-input option { color: var(--text); background: #fff; }
+.btn-inscrire { width: 100%; background: var(--ze-yellow); color: var(--ze-dark); border: none; border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 800; cursor: pointer; transition: transform 0.1s, opacity 0.15s; margin-top: 4px; }
+.btn-inscrire:hover { transform: scale(1.01); }
+.btn-inscrire:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.form-msg { font-size: 13px; margin-top: 10px; padding: 8px 12px; border-radius: 6px; display: none; }
+.form-msg.ok { background: rgba(16,185,129,0.2); color: #6ee7b7; display: block; }
+.form-msg.err { background: rgba(239,68,68,0.2); color: #fca5a5; display: block; }
+
+/* LISTE INSCRITS */
+.inscrits-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-top: 20px; }
+.inscrit-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 8px; }
+.inscrit-avatar { width: 32px; height: 32px; background: var(--ze-yellow); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: var(--ze-dark); flex-shrink: 0; }
+.inscrit-name { font-size: 12px; font-weight: 600; color: #fff; line-height: 1.3; }
+.inscrit-dept { font-size: 10px; color: rgba(255,255,255,0.5); }
+.inscrit-num { font-size: 10px; color: var(--cg-teal); font-weight: 700; }
+.inscrits-count { display: inline-block; background: var(--cg-teal); color: var(--cg-navy); font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 20px; margin-bottom: 12px; }
 
 /* GROUPES */
 .groups-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
@@ -98,7 +122,6 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
 .score-btn { background: var(--cg-teal); color: var(--cg-navy); border: none; border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; display: block; margin: 4px auto 0; white-space: nowrap; }
 .score-btn:hover { opacity: 0.85; }
 .score-btn.locked { background: #f3f4f6; color: var(--muted); cursor: not-allowed; }
-.match-meta { font-size: 10px; color: var(--muted); text-align: center; margin-top: 2px; }
 
 /* BRACKET */
 .bracket-wrap { overflow-x: auto; }
@@ -129,52 +152,55 @@ main { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
 .rpts { display: inline-block; background: var(--cg-navy); color: var(--cg-teal); font-size: 12px; font-weight: 800; padding: 3px 8px; border-radius: 6px; }
 
 /* PRONOSTICS */
-.prono-hero { background: var(--cg-navy); border-radius: var(--radius); padding: 28px; text-align: center; color: #fff; margin-bottom: 22px; }
-.prono-hero h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.prono-hero { background: var(--cg-navy); border-radius: var(--radius); padding: 28px; margin-bottom: 22px; }
+.prono-hero h2 { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 6px; }
 .prono-hero p { font-size: 13px; color: rgba(255,255,255,0.65); margin-bottom: 18px; }
-.prono-link { display: inline-block; background: var(--ze-yellow); color: var(--ze-dark); font-size: 14px; font-weight: 800; padding: 12px 28px; border-radius: 8px; text-decoration: none; transition: transform 0.1s; }
-.prono-link:hover { transform: scale(1.02); }
+.prono-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 10px; align-items: end; }
+.prono-field label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 5px; }
+.prono-input { width: 100%; padding: 10px 12px; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 8px; font-size: 13px; background: rgba(255,255,255,0.12); color: #fff; outline: none; }
+.prono-input::placeholder { color: rgba(255,255,255,0.4); }
+.prono-input:focus { border-color: var(--cg-teal); }
+.btn-prono { background: var(--ze-yellow); color: var(--ze-dark); border: none; border-radius: 8px; padding: 10px 20px; font-size: 13px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+.btn-prono:hover { opacity: 0.9; }
 .prono-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .prono-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 14px; }
 .prono-who { font-weight: 700; font-size: 13px; margin-bottom: 8px; color: var(--cg-navy); }
 .prono-item { font-size: 12px; display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f3f4f6; }
 .prono-item:last-child { border-bottom: none; }
 .prono-item span:last-child { font-weight: 600; }
+.prono-msg { font-size: 12px; margin-top: 8px; color: var(--cg-teal); display: none; }
 
-/* ADMIN PANEL */
-.admin-btn { background: var(--ze-dark); color: var(--ze-yellow); border: none; border-radius: 8px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
-.admin-btn:hover { background: #444; }
-.admin-section { background: #1a1a2e; border-radius: var(--radius); padding: 20px; margin-bottom: 20px; border: 1px solid #2d2d4e; }
+/* ADMIN */
+.admin-section { background: #1a1a2e; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; border: 1px solid #2d2d4e; }
 .admin-section h3 { color: var(--ze-yellow); font-size: 14px; margin-bottom: 12px; }
+.admin-btns { display: flex; flex-direction: column; gap: 10px; }
+.admin-btn { background: var(--ze-dark); color: var(--ze-yellow); border: 1px solid #444; border-radius: 8px; padding: 10px 18px; font-size: 13px; font-weight: 700; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 8px; transition: background 0.15s; }
+.admin-btn:hover { background: #3a3a3a; }
+.admin-btn.danger { color: #fca5a5; border-color: #7f1d1d; }
 
 /* MODAL */
-.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 500; align-items: center; justify-content: center; }
+.modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 500; align-items: center; justify-content: center; }
 .modal-bg.open { display: flex; }
-.modal { background: var(--card); border-radius: 16px; padding: 28px; width: 90%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+.modal { background: var(--card); border-radius: 16px; padding: 28px; width: 90%; max-width: 380px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
 .modal h3 { font-size: 17px; font-weight: 700; margin-bottom: 6px; color: var(--cg-navy); }
-.modal p { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
+.modal p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
 .modal input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-size: 14px; margin-bottom: 10px; outline: none; transition: border-color 0.15s; }
 .modal input:focus { border-color: var(--cg-teal); }
 .modal-btns { display: flex; gap: 8px; }
-.btn-primary { flex: 1; background: var(--cg-navy); color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 700; cursor: pointer; }
+.btn-primary { flex: 1; background: var(--cg-navy); color: #fff; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
 .btn-primary:hover { background: var(--cg-teal); color: var(--cg-navy); }
 .btn-cancel { background: var(--bg); color: var(--muted); border: 1px solid var(--border); border-radius: 8px; padding: 11px 16px; font-size: 14px; cursor: pointer; }
-.modal-error { font-size: 12px; color: var(--red); margin-bottom: 8px; display: none; }
+.modal-err { font-size: 12px; color: var(--red); margin-bottom: 8px; display: none; }
 
-/* LEGEND */
+/* MISC */
 .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; }
 .leg { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--muted); }
 .leg-line { width: 14px; height: 3px; border-radius: 2px; }
-
-/* MISC */
 .loading { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
-.spin { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(0,212,200,0.2); border-top-color: var(--cg-teal); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+.spin { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(0,212,200,0.2); border-top-color: var(--cg-teal); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
 @keyframes spin { to { transform: rotate(360deg); } }
 .empty { text-align: center; padding: 32px; color: var(--muted); font-size: 13px; }
-.badge-q { color: var(--cg-teal); font-size: 14px; }
-.badge-r { color: var(--ze-yellow); font-size: 13px; }
-.badge-x { color: var(--border); font-size: 13px; }
-.alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+.alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 12px; }
 .alert-info { background: #eff6ff; color: #1e40af; border: 1px solid #bfdbfe; }
 .alert-success { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
 .alert-warn { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
@@ -182,12 +208,18 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
 .footer-brands { display: flex; justify-content: center; align-items: center; gap: 12px; margin-bottom: 4px; font-weight: 800; font-size: 13px; }
 .fze { color: var(--ze-dark); } .fze em { color: var(--ze-yellow); font-style: normal; background: var(--ze-dark); padding: 0 2px; border-radius: 2px; }
 .fcg { color: var(--cg-navy); } .fcg em { color: var(--cg-teal); font-style: normal; }
+
+@media (max-width: 900px) {
+  .groups-grid { grid-template-columns: repeat(2, 1fr); }
+  .prono-form { grid-template-columns: 1fr 1fr; }
+}
 @media (max-width: 768px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .groups-grid { grid-template-columns: repeat(2, 1fr); }
   .prono-grid { grid-template-columns: 1fr; }
   .brands { display: none; }
   .stat-val { font-size: 24px; }
+  .form-row { grid-template-columns: 1fr; }
+  .prono-form { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
   .groups-grid { grid-template-columns: 1fr; }
@@ -217,7 +249,7 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
 
 <nav>
   <div class="nav-inner">
-    <button class="nav-btn active" onclick="goPage('accueil',this)">🏠 Accueil</button>
+    <button class="nav-btn active" onclick="goPage('inscription',this)">📝 Inscription</button>
     <button class="nav-btn" onclick="goPage('groupes',this)">👥 Groupes</button>
     <button class="nav-btn" onclick="goPage('matchs',this)">📋 Matchs</button>
     <button class="nav-btn" onclick="goPage('arbre',this)">🏆 Phases finales</button>
@@ -229,32 +261,27 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
 
 <main>
 
-<!-- ACCUEIL -->
-<div class="page active" id="page-accueil">
-  <div class="stats-grid">
-    <div class="stat-card sc-y">
-      <div class="stat-label">Inscrits</div>
-      <div class="stat-val" id="s-joueurs">–</div>
-      <div class="stat-sub">joueurs</div>
+<!-- INSCRIPTION -->
+<div class="page active" id="page-inscription">
+  <div class="inscription-hero">
+    <h2>🏓 Ze Ping Pong 2026</h2>
+    <p>Inscris-toi pour participer au tournoi interne ZePlug × ChargeGuru !</p>
+
+    <div class="inscription-form">
+      <div class="form-row">
+        <input class="form-input" id="ins-prenom" type="text" placeholder="Prénom" autocomplete="given-name">
+        <input class="form-input" id="ins-nom" type="text" placeholder="Nom" autocomplete="family-name">
+      </div>
+      <input class="form-input" id="ins-dept" type="text" placeholder="Équipe / Département" style="margin-bottom:10px">
+      <button class="btn-inscrire" onclick="inscrire()" id="btn-ins">S'inscrire au tournoi →</button>
+      <div class="form-msg" id="ins-msg"></div>
     </div>
-    <div class="stat-card sc-t">
-      <div class="stat-label">Matchs joués</div>
-      <div class="stat-val" id="s-matchs">–</div>
-      <div class="stat-sub" id="s-matchs-sub">–</div>
-    </div>
-    <div class="stat-card sc-n">
-      <div class="stat-label">Groupes</div>
-      <div class="stat-val" id="s-groupes">–</div>
-      <div class="stat-sub">de 5 joueurs</div>
-    </div>
-    <div class="stat-card sc-d">
-      <div class="stat-label">Phase</div>
-      <div class="stat-val" style="font-size:16px;padding-top:8px" id="s-phase">–</div>
-      <div class="stat-sub" id="s-phase-sub"></div>
+
+    <div style="margin-top:24px">
+      <div class="inscrits-count" id="ins-count">0 inscrits</div>
+      <div class="inscrits-grid" id="inscrits-list"><div style="color:rgba(255,255,255,0.4);font-size:13px">Aucun inscrit pour le moment</div></div>
     </div>
   </div>
-  <p class="stitle">Aperçu des groupes</p>
-  <div class="groups-grid" id="home-groups"><div class="loading"><span class="spin"></span>Chargement...</div></div>
 </div>
 
 <!-- GROUPES -->
@@ -286,7 +313,22 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
   <div class="prono-hero">
     <h2>🎯 Fais ton pronostic !</h2>
     <p>Qui va soulever le trophée ? Vote avant le début du tournoi !</p>
-    <a href="https://forms.gle/btEdyw7pcvePB7PX6" target="_blank" class="prono-link">Voter maintenant →</a>
+    <div class="prono-form">
+      <div class="prono-field">
+        <label>Ton prénom</label>
+        <input class="prono-input" id="p-nom" type="text" placeholder="Prénom">
+      </div>
+      <div class="prono-field">
+        <label>Vainqueur 🏆</label>
+        <input class="prono-input" id="p-win" type="text" placeholder="Qui va gagner ?">
+      </div>
+      <div class="prono-field">
+        <label>Finaliste 🥈</label>
+        <input class="prono-input" id="p-fin" type="text" placeholder="Qui sera en finale ?">
+      </div>
+      <button class="btn-prono" onclick="submitProno()">Voter →</button>
+    </div>
+    <div class="prono-msg" id="prono-msg"></div>
   </div>
   <p class="stitle">Les pronostics de l'équipe</p>
   <div class="prono-grid" id="pronostics-content"><div class="loading"><span class="spin"></span>Chargement...</div></div>
@@ -296,14 +338,14 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
 <div class="page" id="page-admin">
   <div class="admin-section">
     <h3>⚙️ Panneau administrateur</h3>
-    <div style="display:flex;flex-direction:column;gap:10px;">
+    <div class="admin-btns">
       <button class="admin-btn" onclick="openModal('tirage')">🎲 Lancer le tirage au sort</button>
-      <button class="admin-btn" onclick="syncInscriptions()">🔄 Synchroniser les inscriptions</button>
+      <button class="admin-btn danger" onclick="openModal('reset')">🗑️ Remettre à zéro le tournoi</button>
     </div>
-    <div id="admin-msg" style="margin-top:12px;font-size:13px;"></div>
+    <div id="admin-msg" style="margin-top:12px"></div>
   </div>
   <div class="alert alert-info">
-    <strong>Mode admin :</strong> Le tirage au sort répartit automatiquement tous les inscrits en groupes et génère le calendrier complet des matchs. Action irréversible.
+    <strong>Infos admin :</strong> Le tirage répartit automatiquement tous les inscrits en groupes et génère tous les matchs. Les scores saisis par les joueurs ne peuvent être modifiés que par l'admin.
   </div>
 </div>
 
@@ -318,17 +360,33 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
   <div>Ze Ping Pong 2026 · Mis à jour à <span id="last-update">–</span></div>
 </footer>
 
-<!-- MODAL SCORE -->
+<!-- MODAL SCORE JOUEUR -->
 <div class="modal-bg" id="modal-score">
   <div class="modal">
     <h3>🏓 Saisir le score</h3>
-    <p id="modal-score-desc">Match en cours</p>
-    <div class="modal-error" id="score-error"></div>
-    <input type="number" id="score-s1" placeholder="Score joueur 1" min="0" max="99">
-    <input type="number" id="score-s2" placeholder="Score joueur 2" min="0" max="99">
+    <p id="modal-score-desc"></p>
+    <div class="modal-err" id="score-err"></div>
+    <input type="number" id="sc-s1" placeholder="Ton score" min="0" max="99">
+    <input type="number" id="sc-s2" placeholder="Score adversaire" min="0" max="99">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-score')">Annuler</button>
-      <button class="btn-primary" onclick="submitScore()">Valider</button>
+      <button class="btn-primary" onclick="submitScore()">✅ Valider</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SCORE ADMIN -->
+<div class="modal-bg" id="modal-admin-score">
+  <div class="modal">
+    <h3>🔐 Modifier le score</h3>
+    <p id="modal-admin-desc"></p>
+    <div class="modal-err" id="admin-score-err"></div>
+    <input type="password" id="admin-pwd" placeholder="Mot de passe admin">
+    <input type="number" id="admin-s1" placeholder="Nouveau score J1" min="0" max="99">
+    <input type="number" id="admin-s2" placeholder="Nouveau score J2" min="0" max="99">
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('modal-admin-score')">Annuler</button>
+      <button class="btn-primary" onclick="submitAdminScore()">Modifier</button>
     </div>
   </div>
 </div>
@@ -336,9 +394,9 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
 <!-- MODAL TIRAGE -->
 <div class="modal-bg" id="modal-tirage">
   <div class="modal">
-    <h3>🎲 Lancer le tirage</h3>
-    <p>Cette action répartit tous les inscrits en groupes et génère le calendrier. Elle est irréversible.</p>
-    <div class="modal-error" id="tirage-error"></div>
+    <h3>🎲 Lancer le tirage au sort</h3>
+    <p>Répartit tous les inscrits en groupes et génère le calendrier complet. Action irréversible.</p>
+    <div class="modal-err" id="tirage-err"></div>
     <input type="password" id="tirage-pwd" placeholder="Mot de passe admin">
     <div class="modal-btns">
       <button class="btn-cancel" onclick="closeModal('modal-tirage')">Annuler</button>
@@ -347,18 +405,16 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
   </div>
 </div>
 
-<!-- MODAL ADMIN SCORE -->
-<div class="modal-bg" id="modal-admin-score">
+<!-- MODAL RESET -->
+<div class="modal-bg" id="modal-reset">
   <div class="modal">
-    <h3>🔐 Modifier le score</h3>
-    <p id="modal-admin-desc">Correction de score (admin uniquement)</p>
-    <div class="modal-error" id="admin-score-error"></div>
-    <input type="password" id="admin-score-pwd" placeholder="Mot de passe admin">
-    <input type="number" id="admin-s1" placeholder="Nouveau score J1" min="0" max="99">
-    <input type="number" id="admin-s2" placeholder="Nouveau score J2" min="0" max="99">
+    <h3>🗑️ Remettre à zéro</h3>
+    <p>Efface tous les scores, groupes et matchs. Les inscriptions sont conservées. Irréversible.</p>
+    <div class="modal-err" id="reset-err"></div>
+    <input type="password" id="reset-pwd" placeholder="Mot de passe admin">
     <div class="modal-btns">
-      <button class="btn-cancel" onclick="closeModal('modal-admin-score')">Annuler</button>
-      <button class="btn-primary" onclick="submitAdminScore()">Modifier</button>
+      <button class="btn-cancel" onclick="closeModal('modal-reset')">Annuler</button>
+      <button class="btn-primary" style="background:var(--red)" onclick="submitReset()">Remettre à zéro</button>
     </div>
   </div>
 </div>
@@ -369,7 +425,7 @@ footer { text-align: center; padding: 20px; font-size: 11px; color: var(--muted)
 // ============================================================
 const SHEET_ID = '1e2dGRVaywZ_ne9N7ffknM1_HM71sy92STVouUabH16s';
 const API_URL  = 'https://script.google.com/macros/s/AKfycby-mZBwTpPS1pS0inaQiHdBq0rzgTpAZs4yXdkFRWm92kMXeqGB3bZHGTmb9D68drU/exec';
-const REFRESH  = 90000; // 90 secondes
+const REFRESH  = 90000;
 
 // ============================================================
 //  NAVIGATION
@@ -382,10 +438,10 @@ function goPage(id, btn) {
 }
 
 // ============================================================
-//  FETCH SHEET (CSV public)
+//  FETCH SHEET CSV
 // ============================================================
 async function fetchSheet(name) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}`;
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}&cachebust=${Date.now()}`;
   const r = await fetch(url);
   if (!r.ok) throw new Error('Sheet introuvable: ' + name);
   return parseCSV(await r.text());
@@ -410,6 +466,88 @@ function toObjs(rows) {
   return rows.slice(1)
     .filter(r => r.some(c => c.replace(/"/g,'').trim()))
     .map(r => Object.fromEntries(hdrs.map((h,i) => [h, (r[i]||'').replace(/"/g,'').trim()])));
+}
+
+// ============================================================
+//  APPEL API
+// ============================================================
+async function callAPI(data) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+    redirect: 'follow'
+  });
+  const text = await res.text();
+  try { return JSON.parse(text); }
+  catch(e) { return { ok: false, error: 'Réponse invalide du serveur' }; }
+}
+
+// ============================================================
+//  INSCRIPTION
+// ============================================================
+async function inscrire() {
+  const prenom = document.getElementById('ins-prenom').value.trim();
+  const nom    = document.getElementById('ins-nom').value.trim();
+  const dept   = document.getElementById('ins-dept').value.trim();
+  const msg    = document.getElementById('ins-msg');
+  const btn    = document.getElementById('btn-ins');
+
+  if (!prenom || !nom) {
+    msg.className = 'form-msg err';
+    msg.textContent = 'Remplis ton prénom et ton nom !';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Inscription en cours...';
+  msg.className = 'form-msg';
+
+  try {
+    const res = await callAPI({ action: 'inscription', prenom, nom, dept });
+    if (res.ok) {
+      msg.className = 'form-msg ok';
+      msg.textContent = `✅ ${prenom}, tu es inscrit(e) ! Bonne chance 🏓`;
+      document.getElementById('ins-prenom').value = '';
+      document.getElementById('ins-nom').value = '';
+      document.getElementById('ins-dept').value = '';
+      loadAll();
+    } else {
+      msg.className = 'form-msg err';
+      msg.textContent = res.error || 'Erreur lors de l\'inscription';
+    }
+  } catch(e) {
+    msg.className = 'form-msg err';
+    msg.textContent = 'Erreur réseau. Réessaie.';
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'S\'inscrire au tournoi →';
+}
+
+// ============================================================
+//  RENDER INSCRITS
+// ============================================================
+function renderInscrits(joueurs) {
+  const count = document.getElementById('ins-count');
+  const list  = document.getElementById('inscrits-list');
+  count.textContent = `${joueurs.length} inscrit${joueurs.length > 1 ? 's' : ''}`;
+
+  if (!joueurs.length) {
+    list.innerHTML = '<div style="color:rgba(255,255,255,0.4);font-size:13px">Aucun inscrit pour le moment</div>';
+    return;
+  }
+
+  list.innerHTML = joueurs.map((j, i) => {
+    const initiales = (j.Nom || '').split(' ').map(w => w[0]||'').join('').toUpperCase().slice(0,2);
+    return `<div class="inscrit-card">
+      <div class="inscrit-avatar">${initiales || (i+1)}</div>
+      <div>
+        <div class="inscrit-name">${j.Nom||'—'}</div>
+        ${j.Dept ? `<div class="inscrit-dept">${j.Dept}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 // ============================================================
@@ -445,26 +583,30 @@ function renderGroup(players, name) {
 // ============================================================
 //  RENDER MATCHS
 // ============================================================
+let globalMatchs = [];
+
 function renderMatchs(matchs) {
-  if (!matchs.length) return '<div class="empty">Aucun match généré. Lance le tirage depuis le panneau Admin.</div>';
+  globalMatchs = matchs;
+  if (!matchs.length) return '<div class="empty">Aucun match généré. Lance le tirage depuis ⚙️ Admin.</div>';
+
   const byGroup = {};
-  for (const m of matchs) {
+  matchs.forEach((m, i) => {
     const g = m.Groupe || '?';
     if (!byGroup[g]) byGroup[g] = [];
-    byGroup[g].push(m);
-  }
-  return Object.entries(byGroup).sort(([a],[b])=>a.localeCompare(b)).map(([g, ms], gi) => {
-    const rows = ms.map((m, mi) => {
+    byGroup[g].push({ ...m, _idx: i });
+  });
+
+  return Object.entries(byGroup).sort(([a],[b]) => a.localeCompare(b)).map(([g, ms]) => {
+    const rows = ms.map(m => {
       const hasScore = m.S1 !== '' && m.S2 !== '';
-      const matchIdx = ms.slice(0, mi).length + Object.values(byGroup).slice(0, gi).reduce((acc, arr) => acc + arr.length, 0);
       const w1 = hasScore && parseInt(m.S1) > parseInt(m.S2);
       const w2 = hasScore && parseInt(m.S2) > parseInt(m.S1);
       const scoreHtml = hasScore
         ? `<div class="mscore">${m.S1} – ${m.S2}</div>`
         : `<div class="mscore pending">à jouer</div>`;
       const btnHtml = hasScore
-        ? `<button class="score-btn locked" onclick="openAdminScore(${matchIdx},'${m.J1}','${m.J2}','${m.S1}','${m.S2}','Groupes')" title="Modifier (admin)">🔐 Modifier</button>`
-        : `<button class="score-btn" onclick="openScore(${matchIdx},'${m.J1}','${m.J2}')">Saisir le score</button>`;
+        ? `<button class="score-btn locked" onclick="openAdminScore(${m._idx},'${m.J1}','${m.J2}','${m.S1}','${m.S2}')">🔐 Modifier</button>`
+        : `<button class="score-btn" onclick="openScore(${m._idx},'${m.J1}','${m.J2}')">Saisir le score</button>`;
       return `<div class="match-row">
         <div><div class="mt ${w1?'win':''}">${m.J1||'—'}</div></div>
         <div style="text-align:center">${scoreHtml}${btnHtml}</div>
@@ -479,39 +621,35 @@ function renderMatchs(matchs) {
 //  RENDER BRACKET
 // ============================================================
 function renderBracket(finales) {
-  const rounds = {};
   const order = ['8e','Quart','Demi','Petite Finale','Finale'];
   const labels = {'8e':'8e de finale','Quart':'Quarts','Demi':'Demi-finales','Petite Finale':'3e place','Finale':'🏆 Finale'};
+  const rounds = {};
   for (const m of finales) {
     const ph = m.Phase||'';
     if (!rounds[ph]) rounds[ph] = [];
     rounds[ph].push(m);
   }
-  const available = order.filter(k => rounds[k] && rounds[k].length);
-  if (!available.length) return '<div class="empty">Les phases finales démarreront après la phase de groupes. 🏓</div>';
+  const available = order.filter(k => rounds[k]?.length);
+  if (!available.length) return '<div class="empty">Les phases finales démarreront après la phase de groupes 🏓</div>';
+
   return '<div class="bracket">' + available.map(key => {
     const ms = rounds[key];
-    const matchHtml = ms.map(m => {
-      const s1 = m.S1!==''&&m.S1!==undefined?m.S1:null;
-      const s2 = m.S2!==''&&m.S2!==undefined?m.S2:null;
-      const w1 = s1!==null&&s2!==null&&parseInt(s1)>parseInt(s2);
-      const w2 = s1!==null&&s2!==null&&parseInt(s2)>parseInt(s1);
-      const t1 = !m.J1||m.J1==='TBD'||m.J1==='';
-      const t2 = !m.J2||m.J2==='TBD'||m.J2==='';
-      return `<div class="b-match">
-        <div class="b-player ${w1?'win':''} ${t1?'tbd':''}">
-          <span>${t1?'À déterminer':m.J1}</span>
-          <span class="b-score">${s1!==null?s1:''}</span>
-        </div>
-        <div class="b-player ${w2?'win':''} ${t2?'tbd':''}">
-          <span>${t2?'À déterminer':m.J2}</span>
-          <span class="b-score">${s2!==null?s2:''}</span>
-        </div>
-      </div>`;
-    }).join('');
     return `<div class="b-round">
       <div class="b-round-title">${labels[key]||key}</div>
-      <div class="b-matches">${matchHtml}</div>
+      <div class="b-matches">${ms.map(m => {
+        const s1 = m.S1!==''?m.S1:null, s2 = m.S2!==''?m.S2:null;
+        const w1 = s1&&s2&&parseInt(s1)>parseInt(s2);
+        const w2 = s1&&s2&&parseInt(s2)>parseInt(s1);
+        const t1 = !m.J1||m.J1==='TBD', t2 = !m.J2||m.J2==='TBD';
+        return `<div class="b-match">
+          <div class="b-player ${w1?'win':''} ${t1?'tbd':''}">
+            <span>${t1?'À déterminer':m.J1}</span><span class="b-score">${s1||''}</span>
+          </div>
+          <div class="b-player ${w2?'win':''} ${t2?'tbd':''}">
+            <span>${t2?'À déterminer':m.J2}</span><span class="b-score">${s2||''}</span>
+          </div>
+        </div>`;
+      }).join('')}</div>
     </div>`;
   }).join('') + '</div>';
 }
@@ -528,19 +666,18 @@ function renderClassement(joueurs) {
   });
   const medals = ['🥇','🥈','🥉'];
   const rows = sorted.map((p,i) => {
-    const pos = i+1;
-    const cls = pos===1?'r1':pos===2?'r2':pos===3?'r3':'';
-    const stat = pos<=16?'<span class="badge-q">✅</span>':'<span class="badge-x">❌</span>';
+    const pos = i+1, cls = pos===1?'r1':pos===2?'r2':pos===3?'r3':'';
     return `<tr>
       <td><span class="rpos ${cls}">${medals[i]||pos}</span></td>
-      <td><span class="rname">${p.Nom||'—'}</span><span class="rgroup">${p.Groupe||'?'}</span></td>
+      <td><span class="rname">${p.Nom||'—'}</span>${p.Groupe?`<span class="rgroup">${p.Groupe}</span>`:''}</td>
       <td>${p.J||0}</td><td>${p.V||0}</td><td>${p.D||0}</td>
       <td><span class="rpts">${p.Points||0}</span></td>
-      <td>${p.GD||0}</td><td>${stat}</td>
+      <td>${p.GD||0}</td>
+      <td>${pos<=16?'✅':'❌'}</td>
     </tr>`;
   }).join('');
   return `<table class="rank-table">
-    <thead><tr><th>#</th><th>Joueur</th><th>J</th><th>V</th><th>D</th><th>Pts</th><th>GD</th><th>Statut</th></tr></thead>
+    <thead><tr><th>#</th><th>Joueur</th><th>J</th><th>V</th><th>D</th><th>Pts</th><th>GD</th><th>Q</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
@@ -550,35 +687,30 @@ function renderClassement(joueurs) {
 // ============================================================
 function renderPronostics(data) {
   if (!data.length) return '<div class="empty">Aucun pronostic pour l\'instant. Sois le premier ! 🎯</div>';
-  return data.map(p => {
-    const nom = p['Prénom et Nom']||p.Prenom||p.Nom||'Anonyme';
-    const win = p.Vainqueur||p['Qui va gagner ?']||'—';
-    const fin = p.Finaliste||p['Qui sera finaliste ?']||'—';
-    const sur = p.Surprise||p['La surprise du tournoi ?']||'—';
-    return `<div class="prono-card">
-      <div class="prono-who">🎯 ${nom}</div>
-      <div class="prono-item"><span>Vainqueur</span><span>🏆 ${win}</span></div>
-      <div class="prono-item"><span>Finaliste</span><span>🥈 ${fin}</span></div>
-      <div class="prono-item"><span>Surprise</span><span>⚡ ${sur}</span></div>
-    </div>`;
-  }).join('');
+  return data.map(p => `
+    <div class="prono-card">
+      <div class="prono-who">🎯 ${p.Prenom||'Anonyme'}</div>
+      <div class="prono-item"><span>Vainqueur</span><span>🏆 ${p.Vainqueur||'—'}</span></div>
+      <div class="prono-item"><span>Finaliste</span><span>🥈 ${p.Finaliste||'—'}</span></div>
+    </div>`).join('');
 }
 
 // ============================================================
-//  CHARGEMENT PRINCIPAL
+//  LOAD ALL
 // ============================================================
-let currentMatchId = null, currentPhase = 'Groupes';
-
 async function loadAll() {
   try {
-    const [joueurRows, matchRows, finalesRows, pronoRows] = await Promise.allSettled([
+    const [jRes, mRes, fRes, pRes] = await Promise.allSettled([
       fetchSheet('Joueurs'), fetchSheet('Matchs'), fetchSheet('Finales'), fetchSheet('Pronostics')
     ]);
 
-    const joueurs = joueurRows.status==='fulfilled' ? toObjs(joueurRows.value) : [];
-    const matchs  = matchRows.status==='fulfilled'  ? toObjs(matchRows.value)  : [];
-    const finales = finalesRows.status==='fulfilled' ? toObjs(finalesRows.value) : [];
-    const pronos  = pronoRows.status==='fulfilled'  ? toObjs(pronoRows.value)  : [];
+    const joueurs = jRes.status==='fulfilled' ? toObjs(jRes.value) : [];
+    const matchs  = mRes.status==='fulfilled' ? toObjs(mRes.value) : [];
+    const finales = fRes.status==='fulfilled' ? toObjs(fRes.value) : [];
+    const pronos  = pRes.status==='fulfilled' ? toObjs(pRes.value) : [];
+
+    // Inscrits
+    renderInscrits(joueurs);
 
     // Groupes
     const gmap = {};
@@ -590,162 +722,133 @@ async function loadAll() {
     const gnames = Object.keys(gmap).sort();
     const ghtml = gnames.length
       ? gnames.map(g => renderGroup(gmap[g], g)).join('')
-      : '<div class="empty" style="grid-column:1/-1">Le tirage n\'a pas encore eu lieu. Lance-le depuis le panneau Admin ⚙️</div>';
-
+      : '<div class="empty" style="grid-column:1/-1">Le tirage n\'a pas encore eu lieu ⚙️</div>';
     document.getElementById('groupes-content').innerHTML = ghtml;
-    document.getElementById('home-groups').innerHTML = ghtml;
 
-    // Stats
-    const joues = matchs.filter(m => m.S1!==''&&m.S2!=='').length;
-    const total  = matchs.filter(m => m.J1!==''||m.J2!=='').length;
-    document.getElementById('s-joueurs').textContent = joueurs.length||'–';
-    document.getElementById('s-matchs').textContent = joues||'–';
-    document.getElementById('s-matchs-sub').textContent = `sur ${total} matchs`;
-    document.getElementById('s-groupes').textContent = gnames.length||'–';
-    const hasFin = finales.some(m => m.J1&&m.J1!=='TBD');
-    document.getElementById('s-phase').textContent = hasFin?'Phases finales':joues>0?'Phase de groupes':'Avant tournoi';
-    document.getElementById('s-phase-sub').textContent = hasFin?'🏆 En cours':joues>0?'⚡ En cours':'📋 Inscriptions';
-
-    // Pages
+    // Matchs
     document.getElementById('matchs-content').innerHTML = renderMatchs(matchs);
+
+    // Arbre
     document.getElementById('bracket-content').innerHTML = renderBracket(finales);
+
+    // Classement
     document.getElementById('classement-content').innerHTML = renderClassement(joueurs);
+
+    // Pronostics
     document.getElementById('pronostics-content').innerHTML = renderPronostics(pronos);
 
     // Footer
     const n = new Date();
     document.getElementById('last-update').textContent = `${n.getHours()}h${String(n.getMinutes()).padStart(2,'0')}`;
 
-  } catch(e) {
-    console.error(e);
-  }
+  } catch(e) { console.error(e); }
 }
 
 // ============================================================
 //  MODALS
 // ============================================================
-function openModal(type) {
-  document.getElementById('modal-'+type).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
+function openModal(id) { document.getElementById('modal-'+id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(bg => {
+  bg.addEventListener('click', e => { if (e.target===bg) bg.classList.remove('open'); });
+});
 
-// Score joueur
+let currentMatchIdx = null;
+
 function openScore(idx, j1, j2) {
-  currentMatchId = idx;
-  currentPhase = 'Groupes';
-  document.getElementById('modal-score-desc').textContent = `${j1} vs ${j2}`;
-  document.getElementById('score-s1').placeholder = `Score de ${j1}`;
-  document.getElementById('score-s2').placeholder = `Score de ${j2}`;
-  document.getElementById('score-s1').value = '';
-  document.getElementById('score-s2').value = '';
-  document.getElementById('score-error').style.display = 'none';
+  currentMatchIdx = idx;
+  document.getElementById('modal-score-desc').textContent = `${j1}  vs  ${j2}`;
+  document.getElementById('sc-s1').placeholder = `Score de ${j1}`;
+  document.getElementById('sc-s2').placeholder = `Score de ${j2}`;
+  document.getElementById('sc-s1').value = '';
+  document.getElementById('sc-s2').value = '';
+  document.getElementById('score-err').style.display = 'none';
   openModal('score');
 }
 
 async function submitScore() {
-  const s1 = document.getElementById('score-s1').value;
-  const s2 = document.getElementById('score-s2').value;
-  const err = document.getElementById('score-error');
+  const s1 = document.getElementById('sc-s1').value;
+  const s2 = document.getElementById('sc-s2').value;
+  const err = document.getElementById('score-err');
   if (s1===''||s2==='') { err.textContent='Remplis les deux scores.'; err.style.display='block'; return; }
-  if (parseInt(s1)===parseInt(s2)) { err.textContent='Match nul non autorisé en ping pong !'; err.style.display='block'; return; }
+  if (parseInt(s1)===parseInt(s2)) { err.textContent='Égalité impossible au ping pong !'; err.style.display='block'; return; }
   err.style.display='none';
   try {
-    const res = await callAPI({ action:'score', matchId: currentMatchId, s1: parseInt(s1), s2: parseInt(s2) });
-    if (res.ok) { closeModal('modal-score'); loadAll(); }
-    else if (res.locked) {
-      err.textContent = res.error;
-      err.style.display = 'block';
-    } else {
-      err.textContent = res.error||'Erreur inconnue';
-      err.style.display = 'block';
-    }
-  } catch(e) { err.textContent='Erreur réseau. Réessaie.'; err.style.display='block'; }
+    const res = await callAPI({ action:'score', matchId: currentMatchIdx, s1: parseInt(s1), s2: parseInt(s2) });
+    if (res.ok) { closeModal('modal-score'); await loadAll(); }
+    else { err.textContent = res.error||'Erreur'; err.style.display='block'; }
+  } catch(e) { err.textContent='Erreur réseau.'; err.style.display='block'; }
 }
 
-// Score admin
-function openAdminScore(idx, j1, j2, s1, s2, phase) {
-  currentMatchId = idx;
-  currentPhase = phase;
-  document.getElementById('modal-admin-desc').textContent = `${j1} vs ${j2} (score actuel: ${s1}–${s2})`;
+function openAdminScore(idx, j1, j2, s1, s2) {
+  currentMatchIdx = idx;
+  document.getElementById('modal-admin-desc').textContent = `${j1} vs ${j2} — score actuel : ${s1}–${s2}`;
   document.getElementById('admin-s1').value = s1;
   document.getElementById('admin-s2').value = s2;
-  document.getElementById('admin-score-pwd').value = '';
-  document.getElementById('admin-score-error').style.display = 'none';
-  document.getElementById('modal-admin-score').classList.add('open');
+  document.getElementById('admin-pwd').value = '';
+  document.getElementById('admin-score-err').style.display = 'none';
+  openModal('admin-score');
 }
 
 async function submitAdminScore() {
-  const pwd = document.getElementById('admin-score-pwd').value;
+  const pwd = document.getElementById('admin-pwd').value;
   const s1  = document.getElementById('admin-s1').value;
   const s2  = document.getElementById('admin-s2').value;
-  const err = document.getElementById('admin-score-error');
+  const err = document.getElementById('admin-score-err');
   if (!pwd||s1===''||s2==='') { err.textContent='Tous les champs sont requis.'; err.style.display='block'; return; }
   try {
-    const res = await callAPI({ action:'score_admin', password:pwd, matchId:currentMatchId, s1:parseInt(s1), s2:parseInt(s2), phase:currentPhase });
-    if (res.ok) { closeModal('modal-admin-score'); loadAll(); }
+    const res = await callAPI({ action:'score_admin', password:pwd, matchId:currentMatchIdx, s1:parseInt(s1), s2:parseInt(s2) });
+    if (res.ok) { closeModal('modal-admin-score'); await loadAll(); }
     else { err.textContent=res.error||'Erreur'; err.style.display='block'; }
   } catch(e) { err.textContent='Erreur réseau.'; err.style.display='block'; }
 }
 
-// Tirage
 async function submitTirage() {
   const pwd = document.getElementById('tirage-pwd').value;
-  const err = document.getElementById('tirage-error');
+  const err = document.getElementById('tirage-err');
   if (!pwd) { err.textContent='Mot de passe requis.'; err.style.display='block'; return; }
   err.style.display='none';
   try {
     const res = await callAPI({ action:'tirage', password:pwd });
     if (res.ok) {
       closeModal('modal-tirage');
-      document.getElementById('admin-msg').innerHTML = `<div class="alert alert-success">✅ Tirage effectué ! ${res.nbJoueurs} joueurs répartis en ${res.nbGroupes} groupes.</div>`;
-      loadAll();
-    } else {
-      err.textContent = res.error||'Erreur';
-      err.style.display = 'block';
-    }
-  } catch(e) { err.textContent='Erreur réseau. Vérifie que le Apps Script est bien déployé.'; err.style.display='block'; }
+      document.getElementById('admin-msg').innerHTML = `<div class="alert alert-success">✅ Tirage effectué ! ${res.nbJoueurs} joueurs en ${res.nbGroupes} groupes.</div>`;
+      await loadAll();
+    } else { err.textContent=res.error||'Erreur'; err.style.display='block'; }
+  } catch(e) { err.textContent='Erreur réseau.'; err.style.display='block'; }
 }
 
-// Sync inscriptions
-async function syncInscriptions() {
-  const msg = document.getElementById('admin-msg');
-  msg.innerHTML = '<div class="alert alert-info"><span class="spin"></span>Synchronisation en cours...</div>';
+async function submitReset() {
+  const pwd = document.getElementById('reset-pwd').value;
+  const err = document.getElementById('reset-err');
+  if (!pwd) { err.textContent='Mot de passe requis.'; err.style.display='block'; return; }
   try {
-    const res = await callAPI({ action:'sync_inscriptions' });
+    const res = await callAPI({ action:'reset', password:pwd });
+    if (res.ok) { closeModal('modal-reset'); await loadAll(); }
+    else { err.textContent=res.error||'Erreur'; err.style.display='block'; }
+  } catch(e) { err.textContent='Erreur réseau.'; err.style.display='block'; }
+}
+
+// Pronostic
+async function submitProno() {
+  const nom = document.getElementById('p-nom').value.trim();
+  const win = document.getElementById('p-win').value.trim();
+  const fin = document.getElementById('p-fin').value.trim();
+  const msg = document.getElementById('prono-msg');
+  if (!nom||!win) { msg.style.cssText='display:block;color:#fca5a5'; msg.textContent='Remplis au moins ton prénom et le vainqueur !'; return; }
+  try {
+    const res = await callAPI({ action:'pronostic', prenom:nom, vainqueur:win, finaliste:fin });
     if (res.ok) {
-      msg.innerHTML = `<div class="alert alert-success">✅ ${res.count} nouveaux inscrits ajoutés !</div>`;
-      loadAll();
-    } else {
-      msg.innerHTML = `<div class="alert alert-warn">⚠️ ${res.error}</div>`;
-    }
-  } catch(e) {
-    msg.innerHTML = '<div class="alert alert-warn">⚠️ Erreur réseau.</div>';
-  }
+      msg.style.cssText='display:block;color:var(--cg-teal)';
+      msg.textContent='✅ Pronostic enregistré !';
+      document.getElementById('p-nom').value='';
+      document.getElementById('p-win').value='';
+      document.getElementById('p-fin').value='';
+      await loadAll();
+    } else { msg.style.cssText='display:block;color:#fca5a5'; msg.textContent=res.error||'Erreur'; }
+  } catch(e) { msg.style.cssText='display:block;color:#fca5a5'; msg.textContent='Erreur réseau.'; }
 }
 
-// ============================================================
-//  APPEL API (Google Apps Script)
-// ============================================================
-async function callAPI(data) {
-  if (API_URL === 'COLLE_ICI_LURL_DU_APPS_SCRIPT') {
-    return { ok: false, error: 'URL du Apps Script non configurée. Suis les instructions dans le panneau Admin.' };
-  }
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  return res.json();
-}
-
-// Fermer modals en cliquant dehors
-document.querySelectorAll('.modal-bg').forEach(bg => {
-  bg.addEventListener('click', e => { if (e.target===bg) bg.classList.remove('open'); });
-});
-
-// Init
 loadAll();
 setInterval(loadAll, REFRESH);
 </script>
