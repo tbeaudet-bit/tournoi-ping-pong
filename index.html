@@ -625,16 +625,38 @@ function toObjs(rows) {
 }
 
 // ============================================================
-//  API
+//  API — JSONP pour contourner CORS avec Google Apps Script
 // ============================================================
-async function callAPI(data) {
-  const res = await fetch(API_URL, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(data), redirect:'follow'
+function callAPI(data) {
+  return new Promise((resolve) => {
+    const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+    const url = API_URL + '?callback=' + callbackName + '&data=' + encodeURIComponent(JSON.stringify(data));
+
+    const script = document.createElement('script');
+
+    window[callbackName] = function(result) {
+      delete window[callbackName];
+      try { document.body.removeChild(script); } catch(e) {}
+      resolve(result);
+    };
+
+    script.onerror = function() {
+      delete window[callbackName];
+      try { document.body.removeChild(script); } catch(e) {}
+      resolve({ ok: false, error: 'Erreur réseau' });
+    };
+
+    setTimeout(() => {
+      if (window[callbackName]) {
+        delete window[callbackName];
+        try { document.body.removeChild(script); } catch(e) {}
+        resolve({ ok: false, error: 'Timeout — réessaie' });
+      }
+    }, 15000);
+
+    script.src = url;
+    document.body.appendChild(script);
   });
-  const text = await res.text();
-  try { return JSON.parse(text); }
-  catch(e) { return { ok:false, error:'Réponse invalide' }; }
 }
 
 // ============================================================
