@@ -543,75 +543,63 @@ function api(data) {
   });
 }
 
-// ============================================================
-//  FETCH SHEET (lecture publique CSV)
-// ============================================================
-async function fetchSheet(name) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(name)}&t=${Date.now()}`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('Sheet introuvable: ' + name);
-  const text = await r.text();
-  return csvToObjs(text);
-}
-
-function csvToObjs(text) {
-  const lines = text.trim().split('\n');
-  if (lines.length < 2) return [];
-  const headers = parseCSVLine(lines[0]);
-  const result  = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cols = parseCSVLine(lines[i]);
-    if (!cols.some(c => c !== '')) continue;
-    const obj = {};
-    headers.forEach((h, idx) => { obj[h] = cols[idx] || ''; });
-    result.push(obj);
-  }
-  return result;
-}
-
-function parseCSVLine(line) {
-  const cols = [];
-  let inQ = false, cur = '';
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') {
-      if (inQ && line[i+1] === '"') { cur += '"'; i++; }
-      else inQ = !inQ;
-    } else if (c === ',' && !inQ) {
-      cols.push(cur.trim());
-      cur = '';
-    } else {
-      cur += c;
-    }
-  }
-  cols.push(cur.trim());
-  return cols;
-}
+// CSV supprimé — on passe par le Apps Script
 
 // ============================================================
-//  LOAD ALL
+//  LOAD ALL — via Apps Script (plus de CSV)
 // ============================================================
 let globalMatchs  = [];
 let globalFinales = [];
 
 async function loadAll() {
   try {
-    const [jR, mR, fR] = await Promise.allSettled([
-      fetchSheet('Joueurs'), fetchSheet('Matchs'), fetchSheet('Finales')
-    ]);
-    const joueurs = jR.status==='fulfilled' ? jR.value : [];
-    const matchs  = mR.status==='fulfilled' ? mR.value : [];
-    const finales = fR.status==='fulfilled' ? fR.value : [];
+    const r = await api({ action: 'getData' });
+    if (!r.ok) { console.error('getData error:', r.error); return; }
 
-    globalMatchs  = matchs;
-    globalFinales = finales;
+    const joueurs = r.joueurs  || [];
+    const matchs  = r.matchs   || [];
+    const finales = r.finales  || [];
 
-    renderInscrits(joueurs);
-    renderGroupes(joueurs);
-    renderMatchs(matchs);
-    renderArbre(finales);
-    renderClassement(joueurs);
-    renderStats(joueurs, matchs, finales);
+    // Normalise les clés (le script renvoie des minuscules)
+    const jNorm = joueurs.map(j => ({
+      'Nom':    j.nom    || '',
+      'Code':   j.code   || '',
+      'Groupe': j.groupe || '',
+      'J':      j.j      || 0,
+      'V':      j.v      || 0,
+      'D':      j.d      || 0,
+      'Pts':    j.pts    || 0,
+      'SG':     j.sg     || 0,
+      'SP':     j.sp     || 0
+    }));
+
+    const mNorm = matchs.map(m => ({
+      'Groupe': m.groupe || '',
+      'J1':     m.j1     || '',
+      'J2':     m.j2     || '',
+      'S1':     m.s1     || '',
+      'S2':     m.s2     || '',
+      'Phase':  m.phase  || 'Poules'
+    }));
+
+    const fNorm = finales.map(f => ({
+      'Phase': f.phase || '',
+      'J1':    f.j1    || '',
+      'J2':    f.j2    || '',
+      'S1':    f.s1    || '',
+      'S2':    f.s2    || '',
+      'Slot':  f.slot  || ''
+    }));
+
+    globalMatchs  = mNorm;
+    globalFinales = fNorm;
+
+    renderInscrits(jNorm);
+    renderGroupes(jNorm);
+    renderMatchs(mNorm);
+    renderArbre(fNorm);
+    renderClassement(jNorm);
+    renderStats(jNorm, mNorm, fNorm);
 
     const n = new Date();
     document.getElementById('last-up').textContent = 'Mis à jour à ' + n.getHours() + 'h' + String(n.getMinutes()).padStart(2,'0');
