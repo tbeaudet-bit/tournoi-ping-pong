@@ -568,9 +568,9 @@ async function loadAll() {
       'J':      j.j      || 0,
       'V':      j.v      || 0,
       'D':      j.d      || 0,
-      'Pts':    j.pts    || 0,
-      'SG':     j.sg     || 0,
-      'SP':     j.sp     || 0
+      'Points': j.pts    || 0,
+      'GD':     j.sg     || 0,
+      'PF':     j.sp     || 0
     }));
 
     const mNorm = matchs.map(m => ({
@@ -643,19 +643,19 @@ function renderGroupes(joueurs) {
   }
   document.getElementById('gr-content').innerHTML = gnames.map(g => {
     const players = [...gmap[g]].sort((a,b) => {
-      const p = (parseInt(b['Pts'])||0) - (parseInt(a['Pts'])||0); if (p) return p;
-      const da = (parseInt(a['SG'])||0)-(parseInt(a['SP'])||0);
-      const db = (parseInt(b['SG'])||0)-(parseInt(b['SP'])||0);
+      const p = (parseInt(b['Points'])||0) - (parseInt(a['Points'])||0); if (p) return p;
+      const da = (parseInt(a['GD'])||0)-(parseInt(a['PF'])||0);
+      const db = (parseInt(b['GD'])||0)-(parseInt(b['PF'])||0);
       if (db!==da) return db-da;
-      return (parseInt(b['SG'])||0)-(parseInt(a['SG'])||0);
+      return (parseInt(b['GD'])||0)-(parseInt(a['GD'])||0);
     });
     const rows = players.map((p,i) => {
       const isMe = p['Nom']?.toLowerCase() === myNom;
       return `<tr class="${i<2?'q1':i===2?'q3':''} ${isMe?'me-row':''}">
         <td><span class="ppos">${i+1}</span><span class="pname">${p['Nom']||'—'}${isMe?' 👈':''}</span></td>
         <td>${p['J']||0}</td><td>${p['V']||0}</td><td>${p['D']||0}</td>
-        <td><span class="pts-c">${p['Pts']||0}</span></td>
-        <td>${p['SG']||0}</td><td>${p['SP']||0}</td>
+        <td><span class="pts-c">${p['Points']||0}</span></td>
+        <td>${p['GD']||0}</td><td>${p['PF']||0}</td>
       </tr>`;
     }).join('');
     return `<div class="gc">
@@ -764,10 +764,10 @@ function renderClassement(joueurs) {
   if (!joueurs.length) { document.getElementById('class-content').innerHTML='<div class="empty">Aucun joueur.</div>'; return; }
   const myNom = ME?.nom?.toLowerCase();
   const sorted = [...joueurs].sort((a,b) => {
-    const p=(parseInt(b['Pts'])||0)-(parseInt(a['Pts'])||0); if(p)return p;
-    const da=(parseInt(a['SG'])||0)-(parseInt(a['SP'])||0), db=(parseInt(b['SG'])||0)-(parseInt(b['SP'])||0);
+    const p=(parseInt(b['Points'])||0)-(parseInt(a['Points'])||0); if(p)return p;
+    const da=(parseInt(a['GD'])||0)-(parseInt(a['PF'])||0), db=(parseInt(b['GD'])||0)-(parseInt(b['PF'])||0);
     if(db!==da)return db-da;
-    return (parseInt(b['SG'])||0)-(parseInt(a['SG'])||0);
+    return (parseInt(b['GD'])||0)-(parseInt(a['GD'])||0);
   });
   const medals=['🥇','🥈','🥉'];
   document.getElementById('class-content').innerHTML = `<table class="rt">
@@ -779,8 +779,8 @@ function renderClassement(joueurs) {
         <td><span class="rpos ${cls}">${medals[i]||pos}</span></td>
         <td><span class="rname">${p['Nom']||'—'}${isMe?' 👈':''}</span>${p['Groupe']?`<span class="rg">${p['Groupe']}</span>`:''}</td>
         <td>${p['J']||0}</td><td>${p['V']||0}</td><td>${p['D']||0}</td>
-        <td><span class="rpts">${p['Pts']||0}</span></td>
-        <td>${p['SG']||0}</td><td>${p['SP']||0}</td>
+        <td><span class="rpts">${p['Points']||0}</span></td>
+        <td>${p['GD']||0}</td><td>${p['PF']||0}</td>
         <td>${pos<=16?'✅':'❌'}</td>
       </tr>`;
     }).join('')}</tbody>
