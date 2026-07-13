@@ -829,12 +829,10 @@ async function submitScore() {
   const err = document.getElementById('m-score-err');
   if (s1===''||s2==='') { showErr(err,'Remplis les deux scores.'); return; }
   err.style.display = 'none';
-  try {
-    const r = await api({ action:'score', matchId:curMatchIdx, s1:parseInt(s1), s2:parseInt(s2), userCode:ME?.code, phase:curPhase });
-    if (r.ok) { closeM('m-score'); loadAll(); }
-    else if (r.error && !r.error.includes('réseau')) showErr(err, r.error||'Erreur');
-    else { closeM('m-score'); loadAll(); }
-  } catch(e) { closeM('m-score'); loadAll(); }
+  // Ferme la modal immédiatement et recharge la page
+  api({ action:'score', matchId:curMatchIdx, s1:parseInt(s1), s2:parseInt(s2), userCode:ME?.code, phase:curPhase });
+  closeM('m-score');
+  setTimeout(() => location.reload(), 1500);
 }
 
 // ============================================================
