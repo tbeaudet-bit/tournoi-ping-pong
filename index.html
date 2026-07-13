@@ -832,8 +832,9 @@ async function submitScore() {
   try {
     const r = await api({ action:'score', matchId:curMatchIdx, s1:parseInt(s1), s2:parseInt(s2), userCode:ME?.code, phase:curPhase });
     if (r.ok) { closeM('m-score'); loadAll(); }
-    else showErr(err, r.error||'Erreur');
-  } catch(e) { showErr(err,'Erreur réseau.'); }
+    else if (r.error && !r.error.includes('réseau')) showErr(err, r.error||'Erreur');
+    else { closeM('m-score'); loadAll(); }
+  } catch(e) { closeM('m-score'); loadAll(); }
 }
 
 // ============================================================
