@@ -703,12 +703,10 @@ function renderMatchs(matchs) {
           : `<div class="mscore pend">à jouer</div>`;
 
         let btnHtml = '';
-        if (isMyMatch && !hasScore) {
+        if (!hasScore) {
           btnHtml = `<button class="sbtn saisir" onclick="openScore(${m._idx},'${escQ(j1)}','${escQ(j2)}',false,'${ph}')">Saisir le score</button>`;
-        } else if (isMyMatch && hasScore) {
+        } else {
           btnHtml = `<button class="sbtn edit" onclick="openScore(${m._idx},'${escQ(j1)}','${escQ(j2)}',true,'${ph}')">✏️ Modifier</button>`;
-        } else if (!hasScore) {
-          btnHtml = `<button class="sbtn gray">à jouer</button>`;
         }
 
         return `<div class="mr ${isMyMatch?'mymatch':''}">
