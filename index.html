@@ -403,7 +403,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--muted);border-t
 //  CONFIG
 // ============================================================
 const SHEET_ID = '1e2dGRVaywZ_ne9N7ffknM1_HM71sy92STVouUabH16s';
-const API      = 'https://script.google.com/macros/s/AKfycbyNL338GjjzcY1DzPaeifCQ3xx7-COZwRQvXhXZZWbpSccUxiFdI_XabvnBlfUdcOYw/exec';
+const API      = 'https://script.google.com/macros/s/AKfycbwkbiZwyV3GkAlupNs4Xlm0vq9USIl073TpG4uRxOZg43Zmr3N7rHrDJ-IbV74H8Mmo/exec';
 const REFRESH  = 90000;
 
 // ============================================================
@@ -523,24 +523,35 @@ function goPage(id, btn) {
 }
 
 // ============================================================
-//  API (JSONP)
+//  API (fetch POST direct — plus fiable que JSONP)
 // ============================================================
-function api(data) {
-  return new Promise((resolve) => {
-    const cb  = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
-    const url = API + '?callback=' + cb + '&data=' + encodeURIComponent(JSON.stringify(data));
-    const s   = document.createElement('script');
-    const done = (result) => {
-      delete window[cb];
-      try { document.body.removeChild(s); } catch(e) {}
-      resolve(result);
-    };
-    window[cb] = done;
-    s.onerror = () => done({ ok:false, error:'Erreur réseau' });
-    setTimeout(() => { if (window[cb]) done({ ok:false, error:'Timeout — réessaie' }); }, 20000);
-    s.src = url;
-    document.body.appendChild(s);
-  });
+async function api(data) {
+  const url = API + '?data=' + encodeURIComponent(JSON.stringify(data));
+  try {
+    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
+    const text = await res.text();
+    // Extrait le JSON de la réponse (peut contenir du HTML autour)
+    const match = text.match(/\{[\s\S]*\}/);
+    if (match) return JSON.parse(match[0]);
+    return { ok: false, error: 'Réponse invalide' };
+  } catch(e) {
+    // Fallback JSONP
+    return new Promise((resolve) => {
+      const cb  = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+      const url2 = API + '?callback=' + cb + '&data=' + encodeURIComponent(JSON.stringify(data));
+      const s   = document.createElement('script');
+      const done = (result) => {
+        delete window[cb];
+        try { document.body.removeChild(s); } catch(e2) {}
+        resolve(result);
+      };
+      window[cb] = done;
+      s.onerror = () => done({ ok:false, error:'Erreur réseau' });
+      setTimeout(() => { if (window[cb]) done({ ok:false, error:'Timeout — réessaie' }); }, 20000);
+      s.src = url2;
+      document.body.appendChild(s);
+    });
+  }
 }
 
 // CSV supprimé — on passe par le Apps Script
