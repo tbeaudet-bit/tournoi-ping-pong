@@ -523,35 +523,25 @@ function goPage(id, btn) {
 }
 
 // ============================================================
-//  API (fetch POST direct — plus fiable que JSONP)
+//  API (JSONP uniquement — seule méthode qui marche avec GAS)
 // ============================================================
-async function api(data) {
-  const url = API + '?data=' + encodeURIComponent(JSON.stringify(data));
-  try {
-    const res = await fetch(url, { method: 'GET', redirect: 'follow' });
-    const text = await res.text();
-    // Extrait le JSON de la réponse (peut contenir du HTML autour)
-    const match = text.match(/\{[\s\S]*\}/);
-    if (match) return JSON.parse(match[0]);
-    return { ok: false, error: 'Réponse invalide' };
-  } catch(e) {
-    // Fallback JSONP
-    return new Promise((resolve) => {
-      const cb  = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*10000);
-      const url2 = API + '?callback=' + cb + '&data=' + encodeURIComponent(JSON.stringify(data));
-      const s   = document.createElement('script');
-      const done = (result) => {
-        delete window[cb];
-        try { document.body.removeChild(s); } catch(e2) {}
-        resolve(result);
-      };
-      window[cb] = done;
-      s.onerror = () => done({ ok:false, error:'Erreur réseau' });
-      setTimeout(() => { if (window[cb]) done({ ok:false, error:'Timeout — réessaie' }); }, 20000);
-      s.src = url2;
-      document.body.appendChild(s);
-    });
-  }
+function api(data) {
+  return new Promise((resolve) => {
+    // Nom de callback simple sans caractères spéciaux
+    const cb  = 'zpp' + Math.floor(Math.random()*9000000 + 1000000);
+    const url = API + '?callback=' + cb + '&data=' + encodeURIComponent(JSON.stringify(data));
+    const s   = document.createElement('script');
+    const done = (result) => {
+      delete window[cb];
+      try { document.body.removeChild(s); } catch(e) {}
+      resolve(result);
+    };
+    window[cb] = done;
+    s.onerror = () => done({ ok:false, error:'Erreur réseau' });
+    setTimeout(() => { if (window[cb]) done({ ok:false, error:'Timeout — réessaie' }); }, 25000);
+    s.src = url;
+    document.body.appendChild(s);
+  });
 }
 
 // CSV supprimé — on passe par le Apps Script
